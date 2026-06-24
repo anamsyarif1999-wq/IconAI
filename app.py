@@ -1,9 +1,9 @@
-import streamlit as st
 from openai import OpenAI
+import streamlit as st
 
 client = OpenAI(
     api_key=st.secrets["DEEPSEEK_API_KEY"],
-    base_url="https://api.deepseek.com"
+    base_url="https://api.deepseek.com/v1"
 )
 
 st.title("AI Customer Service ICONNET")
