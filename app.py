@@ -4,6 +4,7 @@ import google.generativeai as genai
 # =====================================
 # KONFIGURASI HALAMAN
 # =====================================
+
 st.set_page_config(
     page_title="AI Customer Service ICONNET",
     page_icon="💬",
@@ -13,59 +14,68 @@ st.set_page_config(
 st.title("💬 AI Customer Service ICONNET")
 
 # =====================================
-# CEK API KEY GEMINI
+# KONEKSI GEMINI
 # =====================================
+
 try:
     genai.configure(
         api_key=st.secrets["GEMINI_API_KEY"]
     )
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    # Model Gemini terbaru
+    model = genai.GenerativeModel("gemini-2.0-flash")
 
 except Exception as e:
-    st.error(f"Gagal membaca GEMINI_API_KEY di Secrets: {e}")
+    st.error(f"Gagal membaca API Key Gemini: {e}")
     st.stop()
 
 # =====================================
 # INPUT
 # =====================================
-chat = st.text_area(
-    "Chat Pelanggan",
-    height=200,
-    placeholder="Contoh: Internet saya link loss sejak pagi."
-)
 
 nama = st.text_input(
-    "Nama pelanggan (opsional)",
+    "Nama Pelanggan (Opsional)",
     placeholder="Contoh: Anam"
 )
 
+chat = st.text_area(
+    "Chat Pelanggan",
+    height=200,
+    placeholder="Paste chat pelanggan di sini..."
+)
+
 # =====================================
-# GENERATE BALASAN
+# GENERATE
 # =====================================
+
 if st.button("Generate Balasan"):
 
     if not chat.strip():
         st.warning("Silakan isi chat pelanggan terlebih dahulu.")
         st.stop()
 
-    sapaan = "Kak" if not nama.strip() else f"Kak {nama.strip()}"
+    sapaan = "Kak"
+
+    if nama.strip():
+        sapaan = f"Kak {nama.strip()}"
 
     prompt = f"""
 Anda adalah Customer Service ICONNET.
 
 ATURAN WAJIB:
 
-- Gunakan sapaan "{sapaan}"
-- Jangan menggunakan Bapak/Ibu
-- Gunakan bahasa sopan dan profesional
-- Berikan empati terlebih dahulu
-- Fokus pada solusi dan tindak lanjut
-- Jangan mengarang informasi
-- Balasan singkat seperti agent customer service
-- Gunakan bahasa Indonesia
+1. Gunakan sapaan "{sapaan}"
+2. Jangan gunakan Bapak/Ibu.
+3. Gunakan bahasa Indonesia yang sopan.
+4. Berikan empati terlebih dahulu.
+5. Fokus pada solusi.
+6. Jangan mengarang informasi yang tidak ada.
+7. Balasan singkat dan profesional.
+8. Gaya bahasa customer service ICONNET.
+9. Jika pelanggan marah tetap tenang dan profesional.
 
 Chat pelanggan:
+
 {chat}
 """
 
@@ -86,4 +96,5 @@ Chat pelanggan:
         )
 
     except Exception as e:
-        st.error(f"Terjadi error: {str(e)}")
+
+        st.error(str(e))
