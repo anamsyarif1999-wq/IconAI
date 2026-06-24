@@ -4,7 +4,7 @@ import google.generativeai as genai
 # CONFIG GEMINI
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("models/gemini-1.5-flash")
 
 st.set_page_config(page_title="AI CS ICONNET")
 
