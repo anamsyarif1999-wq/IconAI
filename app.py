@@ -1,7 +1,9 @@
 import streamlit as st
 import google.generativeai as genai
 
+# =========================
 # CONFIG GEMINI
+# =========================
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 model = genai.GenerativeModel("models/gemini-1.5-flash")
@@ -26,7 +28,7 @@ Anda adalah Customer Service ICONNET.
 ATURAN:
 - Gunakan sapaan "{sapaan}"
 - Bahasa sopan dan profesional
-- Berikan empati
+- Berikan empati terlebih dahulu
 - Fokus solusi
 - Jangan mengarang informasi
 
