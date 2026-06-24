@@ -17,14 +17,12 @@ nama = st.text_input("Nama pelanggan (opsional)", "")
 
 if st.button("Generate Balasan"):
 
-```
 if nama.strip() == "":
     sapaan = "Kak"
 else:
     sapaan = f"Kak {nama.strip()}"
 
 prompt = f"""
-```
 
 Anda adalah Customer Service ICONNET.
 
@@ -41,7 +39,6 @@ Chat pelanggan:
 {chat}
 """
 
-```
 with st.spinner("Sedang membuat balasan..."):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
