@@ -1,11 +1,10 @@
 import streamlit as st
-import google.generativeai as genai
+from openai import OpenAI
 
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-
-model = genai.GenerativeModel("models/gemini-1.5-flash-latest")
-
-st.set_page_config(page_title="AI CS ICONNET")
+client = OpenAI(
+    api_key=st.secrets["DEEPSEEK_API_KEY"],
+    base_url="https://api.deepseek.com"
+)
 
 st.title("AI Customer Service ICONNET")
 
@@ -14,27 +13,24 @@ nama = st.text_input("Nama pelanggan (opsional)", "")
 
 if st.button("Generate Balasan"):
 
-    if nama.strip() == "":
-        sapaan = "Kak"
-    else:
-        sapaan = f"Kak {nama.strip()}"
+    sapaan = "Kak" if nama.strip() == "" else f"Kak {nama.strip()}"
 
     prompt = f"""
 Anda adalah Customer Service ICONNET.
 
-ATURAN:
-- Gunakan sapaan "{sapaan}"
-- Bahasa sopan dan profesional
-- Berikan empati terlebih dahulu
-- Fokus solusi
-- Jangan mengarang informasi
+Gunakan sapaan {sapaan}.
+Jawab sesuai SOP.
+Sopan dan profesional.
 
 Chat pelanggan:
 {chat}
 """
 
-    with st.spinner("Sedang membuat balasan..."):
-        response = model.generate_content(prompt)
-        hasil = response.text
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    hasil = response.choices[0].message.content
 
     st.text_area("Balasan AI", hasil, height=250)
