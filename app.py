@@ -23,14 +23,12 @@ nama = st.text_input(
 
 if st.button("Generate Balasan"):
 
-```
 if nama.strip() == "":
     sapaan = "Kak"
 else:
     sapaan = f"Kak {nama.strip()}"
 
 prompt = f"""
-```
 
 Anda adalah Customer Service ICONNET.
 
