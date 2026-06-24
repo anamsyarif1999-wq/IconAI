@@ -1,66 +1,41 @@
 import streamlit as st
-from openai import OpenAI
+import google.generativeai as genai
 
-# API Key dari Streamlit Secrets
+# CONFIG GEMINI
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-client = OpenAI(
-api_key=st.secrets["OPENAI_API_KEY"]
-)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 st.set_page_config(page_title="AI CS ICONNET")
 
 st.title("AI Customer Service ICONNET")
 
-chat = st.text_area(
-"Chat Pelanggan",
-height=200
-)
-
-nama = st.text_input(
-"Nama pelanggan (opsional)",
-""
-)
+chat = st.text_area("Chat Pelanggan", height=200)
+nama = st.text_input("Nama pelanggan (opsional)", "")
 
 if st.button("Generate Balasan"):
 
-if nama.strip() == "":
-    sapaan = "Kak"
-else:
-    sapaan = f"Kak {nama.strip()}"
+    if nama.strip() == "":
+        sapaan = "Kak"
+    else:
+        sapaan = f"Kak {nama.strip()}"
 
-prompt = f"""
-
+    prompt = f"""
 Anda adalah Customer Service ICONNET.
 
 ATURAN:
-
-* Gunakan sapaan "{sapaan}"
-* Jangan gunakan Bapak/Ibu
-* Gunakan bahasa sopan dan profesional
-* Berikan empati terlebih dahulu
-* Fokus pada solusi dan tindak lanjut
-* Jangan membuat informasi yang tidak pasti
+- Gunakan sapaan "{sapaan}"
+- Bahasa sopan dan profesional
+- Berikan empati
+- Fokus solusi
+- Jangan mengarang informasi
 
 Chat pelanggan:
 {chat}
 """
 
-```
-with st.spinner("Sedang membuat balasan..."):
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    )
+    with st.spinner("Sedang membuat balasan..."):
+        response = model.generate_content(prompt)
+        hasil = response.text
 
-hasil = response.choices[0].message.content
-
-st.text_area(
-    "Balasan AI",
-    hasil,
-    height=250
-)
+    st.text_area("Balasan AI", hasil, height=250)
